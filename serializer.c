@@ -183,11 +183,11 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 	fmt_ch = fmt;
 	for(fmt_ch = fmt; *fmt_ch; fmt_ch++) {
 		item_count++;
+		payload_total_size += sizeof(struct item);
 		if(IS_TYPE_ARRAY(*fmt_ch)) {
 			payload_total_size += va_arg(ap, size_t);
 			va_arg(ap, void *);
 		} else {
-			payload_total_size += getprimsize(*fmt_ch);
 			// jog the va list to stay in line for arrays
 			switch(*fmt_ch) {
 			case DATA_TYPE_CHAR:     va_arg(ap, char); break;
