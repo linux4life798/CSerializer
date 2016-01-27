@@ -240,7 +240,6 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 			assert(buf_size > 0);
 			assert(buf);
 
-			item->type = *fmt_ch;
 			item->data.array.buf_size = buf_size;
 			memcpy(item->data.array.buf, buf, buf_size);
 
@@ -260,6 +259,10 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 
 		}
 
+		/* set item type */
+		item->type = *fmt_ch;
+
+		/* set table entry */
 		if(type==SERIAL_TYPE_WITHTABLE) {
 			table->info[item_index].type = *fmt_ch;
 			table->info[item_index].payload_off = item_payload_off;
