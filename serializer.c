@@ -148,17 +148,16 @@ getitem(serial_data_t sdata, size_t index) {
 	}
 }
 
-
-static inline
-size_t getprimsize(data_type_t type) {
-	switch(type) {
-	case DATA_TYPE_CHAR: return sizeof(char);
-	case DATA_TYPE_SHORT: return sizeof(short);
-	case DATA_TYPE_INT: return sizeof(int);
-	case DATA_TYPE_LONG: return sizeof(long);
-	case DATA_TYPE_LONGLONG: return sizeof(long long);
-	default: assert(0);
+static struct item *
+getnextitem(serial_data_t sdata, struct item *item) {
+	struct item *next_item = PTR_UOFFSET(item, getitemsizetotal(item));
+	/* if we should check item bounds against sdata */
+	if(sdata) {
+		if(OFF_PTRDIFF(next_item, sdata->payload) >= sdata->payload_size) {
+			return NULL;
+		}
 	}
+	return next_item;
 }
 
 #define CASE_PRIM_SIZESUM(ch, type, var) case ch: (var)+=sizeof(type); break;
@@ -197,7 +196,6 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 			case DATA_TYPE_LONGLONG: va_arg(ap, long long); break;
 			default: assert(0);
 			}
-
 		}
 	}
 
@@ -306,6 +304,30 @@ void serial_print_table(serial_data_t sdata) {
 	for(index = 0; index < table->count; index++) {
 		struct item_info info = table->info[index];
 		printf("[ [%lu] type: %c, off: %lu ]\n", index, info.type, info.payload_off);
+	}
+}
+
+
+/**
+ * @brief Retrieve the number of items in the serial data
+ * @param[in] sdata The serial data source
+ * @return The number of items in the serial data
+ */
+size_t serial_item_count(serial_data_t sdata) {
+	assert(sdata);
+
+	if(sdata->type==SERIAL_TYPE_WITHTABLE) {
+		return gettable(sdata)->count;
+	} else {
+		struct item *item;
+		size_t off;
+		size_t item_count = 0;
+		fprintf(stderr, "used traversal\n");
+		/* traverse items until out of payload_size bounds */
+		for(item = getitem(sdata, 0); item; item = getnextitem(sdata, item)) {
+			item_count++;
+		}
+		return item_count;
 	}
 }
 

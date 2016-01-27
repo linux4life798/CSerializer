@@ -51,4 +51,6 @@ serial_data_t serial_pack_extra(serial_type_t type, const char *fmt, ...);
 serial_data_t serial_pack(const char *fmt, ...);
 int getnext_int(serial_data_t sdata);
 
+size_t serial_item_count(serial_data_t sdata);
+
 #endif /* SERIALIZER_SERIALIZER_H_ */
