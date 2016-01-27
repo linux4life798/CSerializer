@@ -174,8 +174,6 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 	struct item_info_table *table;
 	struct item *item;
 
-	/*TODO Implement table serial model */
-//	assert(type == SERIAL_TYPE_BARE);
 	assert(type==SERIAL_TYPE_BARE || type==SERIAL_TYPE_WITHTABLE);
 
 	/* count number of items and their sizes */
@@ -242,10 +240,6 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 			assert(buf_size > 0);
 			assert(buf);
 
-//			if(type==SERIAL_TYPE_WITHTABLE) {
-//				table->info[item_index].type = *fmt_ch;
-//				table->info[item_index].payload_off = item_payload_off;
-//			}
 			item->type = *fmt_ch;
 			item->data.array.buf_size = buf_size;
 			memcpy(item->data.array.buf, buf, buf_size);
