@@ -12,7 +12,7 @@
  */
 typedef enum serial_type {
 	SERIAL_TYPE_BARE,
-	SERIAL_TYPE_HASTABLE
+	SERIAL_TYPE_WITHTABLE
 } serial_type_t;
 
 typedef struct serial_data {
@@ -46,5 +46,9 @@ typedef enum data_type {
 	DATA_TYPE_BUFFER   = 'B'
 } data_type_t;
 
+
+serial_data_t serial_pack_extra(serial_type_t type, const char *fmt, ...);
+serial_data_t serial_pack(const char *fmt, ...);
+int getnext_int(serial_data_t sdata);
 
 #endif /* SERIALIZER_SERIALIZER_H_ */
