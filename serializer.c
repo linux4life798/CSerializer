@@ -67,6 +67,30 @@ struct item {
 	} data;
 };
 
+static size_t
+getitemsize(struct item *item) {
+	assert(item);
+
+	if (IS_TYPE_ARRAY(item->type)) {
+		return item->data.array.buf_size;
+	} else {
+		switch (item->type) {
+		case DATA_TYPE_CHAR:
+			return sizeof(item->data.prim.CHAR);
+		case DATA_TYPE_SHORT:
+			return sizeof(item->data.prim.CHAR);
+		case DATA_TYPE_INT:
+			return sizeof(item->data.prim.CHAR);
+		case DATA_TYPE_LONG:
+			return sizeof(item->data.prim.CHAR);
+		case DATA_TYPE_LONGLONG:
+			return sizeof(item->data.prim.CHAR);
+		default:
+			assert(0);
+		}
+	}
+}
+
 /**@internal
  * @brief Return the entire size of an item in the payload.
  *
