@@ -26,7 +26,7 @@
 
 /*-- Table Data Types --*/
 
-/**
+/**@internal
  * @brief Information about a packed data item
  */
 struct item_info {
@@ -34,7 +34,7 @@ struct item_info {
 	size_t payload_off;
 };
 
-/**
+/**@internal
  * @brief A table that contains information about packed data items
  */
 struct item_info_table {
@@ -44,7 +44,7 @@ struct item_info_table {
 
 /*-- Data Item Type --*/
 
-/**
+/**@internal
  * @brief A data item
  */
 struct item {
@@ -67,7 +67,7 @@ struct item {
 	} data;
 };
 
-/**
+/**@internal
  * @brief Return the entire size of an item in the payload.
  *
  * @note This is used when traversing items in the payload.
@@ -86,7 +86,7 @@ getitemsizetotal(struct item *item) {
 	}
 }
 
-/**
+/**@internal
  * @brief Fetch a pointer to the info table
  * @param[in] sdata The serial data source
  * @return Pointer to the inner info table, or NULL if table is disabled.
@@ -100,7 +100,7 @@ gettable(serial_data_t sdata) {
 	return (struct item_info_table *)sdata->payload;
 }
 
-/**
+/**@internal
  * @brief Fetch the info from the table for a particular item index
  * @param[in] sdata The serial data source
  * @param[in] index The item's index
@@ -118,7 +118,7 @@ getinfo(serial_data_t sdata, size_t index) {
 	}
 }
 
-/**
+/**@internal
  * @brief Fetch the index*th item
  *
  * We traverse serial data payload and find the index*th data item struct.
@@ -194,7 +194,6 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 	assert(type==SERIAL_TYPE_BARE || type==SERIAL_TYPE_WITHTABLE);
 
 	/* count number of items and their sizes */
-
 	item_count = 0;
 	va_copy(ap, va);
 	fmt_ch = fmt;
@@ -240,7 +239,6 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 	}
 
 	/* copy in items and setup info table */
-
 	item_index = 0;
 	item = (struct item *)(sdata->payload+sdata->data_items_off);
 	va_copy(ap, va);
