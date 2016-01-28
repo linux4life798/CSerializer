@@ -421,7 +421,7 @@ size_t serial_item_count(serial_data_t sdata) {
 	} else {
 		struct item *item;
 		size_t item_count = 0;
-		/* traverse items until out of payload_size bounds */
+		/* traverse items */
 		for(item = getitem(sdata, 0); item; item = getnextitem(sdata, item)) {
 			item_count++;
 		}
