@@ -15,6 +15,12 @@ typedef enum serial_type {
 	SERIAL_TYPE_WITHTABLE
 } serial_type_t;
 
+/**@struct serial_data
+ * @brief The representation of serialized data
+ *
+ * Users should always use the \ref serial_data_t type,
+ * which is a pointer of a struct managed by the serializer library.
+ */
 typedef struct serial_data {
 	serial_type_t type;
 
