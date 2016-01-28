@@ -124,7 +124,8 @@ getitemsizetotal(struct item *item) {
  */
 static struct item *
 getnextitem(serial_data_t sdata, struct item *item) {
-	struct item *next_item = PTR_UOFFSET(item, getitemsizetotal(item));
+	struct item *next_item
+			= (struct item *)PTR_UOFFSET(item, getitemsizetotal(item));
 	/* if we should check item bounds against sdata */
 	if(sdata) {
 		if(OFF_PTRDIFF(next_item, sdata->payload) >= sdata->payload_size) {
