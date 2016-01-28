@@ -448,7 +448,7 @@ void serial_print_table(serial_data_t sdata) {
 
 	for(index = 0; index < table->count; index++) {
 		struct item_info info = table->info[index];
-		printf("[ [%lu] type: %c, off: %lu ]\n", index, info.type, info.payload_off);
+		printf("[%lu] type: %c | off: %lu\n", index, info.type, info.payload_off);
 	}
 }
 
