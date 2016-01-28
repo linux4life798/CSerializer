@@ -100,7 +100,12 @@ gettable(serial_data_t sdata) {
 	return (struct item_info_table *)sdata->payload;
 }
 
-
+/**
+ * @brief Fetch the info from the table for a particular item index
+ * @param[in] sdata The serial data source
+ * @param[in] index The item's index
+ * @return The item's info entry or NULL if no table exists
+ */
 static struct item_info *
 getinfo(serial_data_t sdata, size_t index) {
 	struct item_info_table *table;
@@ -120,6 +125,9 @@ getinfo(serial_data_t sdata, size_t index) {
  * We use the info table for a quick lookup, if the serial data contains
  * an info table.
  *
+ * This operation is worst case O(n) for n elements.
+ * If \ref SERIAL_TYPE_WITHTABLE is enabled, the worst case is O(1).
+ *
  * @param[in] sdata The serial data source
  * @param[in] index The index of the item to get
  * @return
@@ -130,7 +138,6 @@ getitem(serial_data_t sdata, size_t index) {
 
 	if(sdata->type == SERIAL_TYPE_WITHTABLE) {
 		size_t payload_off;
-		fprintf(stderr, "used table lookup\n");
 		// ensure index is within the table
 		assert(index < gettable(sdata)->count);
 		payload_off = gettable(sdata)->info[index].payload_off;
@@ -138,7 +145,6 @@ getitem(serial_data_t sdata, size_t index) {
 	} else {
 		struct item *item;
 		size_t i;
-		fprintf(stderr, "used traversal\n");
 		/* traverse index items */
 		item = (struct item *)PTR_UOFFSET(sdata->payload, sdata->data_items_off);
 		for(i = 0; i != index; i++) {
@@ -148,6 +154,18 @@ getitem(serial_data_t sdata, size_t index) {
 	}
 }
 
+/**@internal
+ * @brief Traverse from one item to the next contiguous item.
+ *
+ * Fetches the next item using only the active elements information.
+ * If the sdata parameter is supplied, the next item's location is
+ * verified to be within the serial data payload. When sdata is provided,
+ * the next item location is only returned if it is within the payload.
+ *
+ * @param[in] sdata The serial data sourcev
+ * @param[in] item The current element we are travering from
+ * @return The next item or NULL if there are no more items
+ */
 static struct item *
 getnextitem(serial_data_t sdata, struct item *item) {
 	struct item *next_item = PTR_UOFFSET(item, getitemsizetotal(item));
@@ -198,14 +216,14 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 			}
 		}
 	}
-
-	/* add space for a table */
+	/* account for the table's space requirement */
 	if(type == SERIAL_TYPE_WITHTABLE) {
 		table_total_size = sizeof(struct item_info_table);
 		table_total_size += sizeof(struct item_info)*item_count;
 		payload_total_size += table_total_size;
 	}
 
+	/* allocate serial data */
 	sdata = (serial_data_t)malloc(sizeof(struct serial_data)+payload_total_size);
 	if(sdata == NULL) {
 		perror("couldn't allocate a serial_data_t");
@@ -322,7 +340,6 @@ size_t serial_item_count(serial_data_t sdata) {
 		struct item *item;
 		size_t off;
 		size_t item_count = 0;
-		fprintf(stderr, "used traversal\n");
 		/* traverse items until out of payload_size bounds */
 		for(item = getitem(sdata, 0); item; item = getnextitem(sdata, item)) {
 			item_count++;
