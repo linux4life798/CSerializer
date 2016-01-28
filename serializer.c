@@ -283,7 +283,7 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 		}
 
 		/* iterate to next item */
-		item = (struct item *)PTR_UOFFSET(item, item_size_total);
+		item = getnextitem(sdata, item);
 
 		item_index++;
 	}
