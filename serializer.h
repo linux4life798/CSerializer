@@ -40,7 +40,15 @@ typedef struct serial_data {
 	char payload[];
 } *serial_data_t;
 
-
+/**
+ * @brief The state data for iterating over serial data's items
+ */
+typedef struct {
+	/**@internal The reference to the serial data */
+	serial_data_t sdata;
+	/**@internal The current serial data item */
+	struct item *item;
+} serial_item_iterator_t;
 
 typedef enum data_type {
 	DATA_TYPE_CHAR     = 'c',
@@ -56,7 +64,35 @@ typedef enum data_type {
 serial_data_t serial_pack_extra(serial_type_t type, const char *fmt, ...);
 serial_data_t serial_pack(const char *fmt, ...);
 
+/*-----------------------------------*
+ *          Item Iterators           *
+ *-----------------------------------*/
+
+/* Sets up the iterator to point to the first item of the serial data */
+serial_item_iterator_t *
+serial_iit_begin(serial_item_iterator_t *it, serial_data_t sdata);
+serial_item_iterator_t *
+serial_iit_next(serial_item_iterator_t *it);
+int serial_iit_hasnext(serial_item_iterator_t *it);
+
+char   serial_iit_get_char   (serial_item_iterator_t *it);
+short  serial_iit_get_short  (serial_item_iterator_t *it);
+int    serial_iit_get_int    (serial_item_iterator_t *it);
+const
+void  *serial_iit_get_buf_ptr(serial_item_iterator_t *it);
+size_t serial_iit_get_buf    (serial_item_iterator_t *it, void *buf);
+size_t serial_iit_get_size   (serial_item_iterator_t *it);
+data_type_t serial_iit_get_type(serial_item_iterator_t *it);
+
+/*-----------------------------------*
+ *            Utilities              *
+ *-----------------------------------*/
+
+/* Get the total size of serialized data - for copying the serialized data */
+size_t serial_data_size(serial_data_t sdata);
+
 size_t serial_item_count(serial_data_t sdata);
 int serial_item_get_int(serial_data_t sdata, size_t index);
+void serial_print_table(serial_data_t sdata);
 
 #endif /* SERIALIZER_SERIALIZER_H_ */

@@ -333,21 +333,76 @@ serial_data_t serial_pack(const char *fmt, ...) {
 	return sdata;
 }
 
-void serial_print_table(serial_data_t sdata) {
-	struct item_info_table *table;
-	size_t index;
-	table = gettable(sdata);
-	if(table == NULL) {
-		printf("[ no table ]\n");
-		return;
-	}
-
-	for(index = 0; index < table->count; index++) {
-		struct item_info info = table->info[index];
-		printf("[ [%lu] type: %c, off: %lu ]\n", index, info.type, info.payload_off);
-	}
+/**
+ * @brief Set the iterator to the first item of the serial data
+ * @param[in] sdata The reference serial data containing iterable items
+ * @param[out] it The iterator to setup
+ * @return \e it
+ */
+serial_item_iterator_t *
+serial_iit_begin(serial_item_iterator_t *it, serial_data_t sdata) {
+	assert(sdata);
+	assert(it);
+	it->sdata = sdata;
+	it->item = getitem(sdata, 0);
+	return it;
 }
 
+/**
+ * @brief Progress the iterator to the next item
+ * @param[in] it The
+ * @return \e it or NULL if no more items exist
+ */
+serial_item_iterator_t *
+serial_iit_next(serial_item_iterator_t *it) {
+	assert(it);
+	it->item = getnextitem(it->sdata, it->item);
+	return it->item?it:NULL;
+}
+int serial_iit_hasnext(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?(getnextitem(it->sdata, it->item)!=NULL):0;
+}
+
+char serial_iit_get_char(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?it->item->data.prim.CHAR:0;
+}
+short serial_iit_get_short(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?it->item->data.prim.SHORT:0;
+}
+int serial_iit_get_int(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?it->item->data.prim.INT:0;
+}
+const void *serial_iit_get_buf_ptr(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?it->item->data.array.buf:NULL;
+}
+size_t serial_iit_get_buf(serial_item_iterator_t *it, void *buf) {
+	size_t buf_size = 0;
+	assert(it);
+	assert(buf);
+	if(it->item) {
+		buf_size = serial_iit_get_size(it);
+		memcpy(buf, it->item->data.array.buf, buf_size);
+	}
+	return buf_size;
+}
+size_t serial_iit_get_size(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?getitemsize(it->item):0;
+}
+data_type_t serial_iit_get_type(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?it->item->type:0;
+}
+
+size_t serial_data_size(serial_data_t sdata) {
+	assert(sdata);
+	return sizeof(struct serial_data) + sdata->payload_size;
+}
 
 /**
  * @brief Retrieve the number of items in the serial data
@@ -376,4 +431,19 @@ int serial_item_get_int(serial_data_t sdata, size_t index) {
 
 	item = getitem(sdata, index);
 	return item->data.prim.INT;
+}
+
+void serial_print_table(serial_data_t sdata) {
+	struct item_info_table *table;
+	size_t index;
+	table = gettable(sdata);
+	if(table == NULL) {
+		printf("[ no table ]\n");
+		return;
+	}
+
+	for(index = 0; index < table->count; index++) {
+		struct item_info info = table->info[index];
+		printf("[ [%lu] type: %c, off: %lu ]\n", index, info.type, info.payload_off);
+	}
 }
