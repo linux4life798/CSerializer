@@ -1,7 +1,9 @@
+CFLAGS += -g -O0
+LDLAGS += -g -O0
 
 .PHONY: all clean doc doc-internal
 
-all:
+all: serializer.o
 
 doc: $(wildcard *.c *.h)
 	doxygen doc/Doxyfile
@@ -9,5 +11,5 @@ doc-internal: $(wildcard *.c *.h)
 	doxygen doc/Doxyfile-internal
 
 clean:
-	$(RM) test *.o
+	$(RM) *.o
 	$(RM) -r doc/html
