@@ -91,6 +91,8 @@ data_type_t serial_iit_get_type(serial_item_iterator_t *it);
 
 /* Get the total size of serialized data - for copying the serialized data */
 size_t serial_data_size    (serial_data_t sdata);
+/* return a pointer to the flat serial data */
+void  *serial_data_flat_ptr(serial_data_t sdata);
 
 size_t serial_item_count   (serial_data_t sdata);
 int    serial_item_get_int (serial_data_t sdata, size_t index);

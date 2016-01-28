@@ -408,6 +408,11 @@ size_t serial_data_size(serial_data_t sdata) {
 	return sizeof(struct serial_data) + sdata->payload_size;
 }
 
+void *serial_data_flat_ptr(serial_data_t sdata) {
+	assert(sdata);
+	return sdata;
+}
+
 /**
  * @brief Retrieve the number of items in the serial data
  * @param[in] sdata The serial data source
