@@ -172,7 +172,7 @@ getitem(serial_data_t sdata, size_t index) {
 		/* traverse index items */
 		item = (struct item *)PTR_UOFFSET(sdata->payload, sdata->data_items_off);
 		for(i = 0; i != index; i++) {
-			item = PTR_UOFFSET(item, getitemsizetotal(item));
+			item = getnextitem(sdata, item);
 		}
 		return item;
 	}
