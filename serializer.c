@@ -336,7 +336,6 @@ size_t serial_item_count(serial_data_t sdata) {
 		return gettable(sdata)->count;
 	} else {
 		struct item *item;
-		size_t off;
 		size_t item_count = 0;
 		/* traverse items until out of payload_size bounds */
 		for(item = getitem(sdata, 0); item; item = getnextitem(sdata, item)) {
