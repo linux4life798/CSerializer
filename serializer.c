@@ -87,6 +87,30 @@ getitemsizetotal(struct item *item) {
 }
 
 /**@internal
+ * @brief Traverse from one item to the next contiguous item.
+ *
+ * Fetches the next item using only the active elements information.
+ * If the sdata parameter is supplied, the next item's location is
+ * verified to be within the serial data payload. When sdata is provided,
+ * the next item location is only returned if it is within the payload.
+ *
+ * @param[in] sdata The serial data sourcev
+ * @param[in] item The current element we are travering from
+ * @return The next item or NULL if there are no more items
+ */
+static struct item *
+getnextitem(serial_data_t sdata, struct item *item) {
+	struct item *next_item = PTR_UOFFSET(item, getitemsizetotal(item));
+	/* if we should check item bounds against sdata */
+	if(sdata) {
+		if(OFF_PTRDIFF(next_item, sdata->payload) >= sdata->payload_size) {
+			return NULL;
+		}
+	}
+	return next_item;
+}
+
+/**@internal
  * @brief Fetch a pointer to the info table
  * @param[in] sdata The serial data source
  * @return Pointer to the inner info table, or NULL if table is disabled.
@@ -152,30 +176,6 @@ getitem(serial_data_t sdata, size_t index) {
 		}
 		return item;
 	}
-}
-
-/**@internal
- * @brief Traverse from one item to the next contiguous item.
- *
- * Fetches the next item using only the active elements information.
- * If the sdata parameter is supplied, the next item's location is
- * verified to be within the serial data payload. When sdata is provided,
- * the next item location is only returned if it is within the payload.
- *
- * @param[in] sdata The serial data sourcev
- * @param[in] item The current element we are travering from
- * @return The next item or NULL if there are no more items
- */
-static struct item *
-getnextitem(serial_data_t sdata, struct item *item) {
-	struct item *next_item = PTR_UOFFSET(item, getitemsizetotal(item));
-	/* if we should check item bounds against sdata */
-	if(sdata) {
-		if(OFF_PTRDIFF(next_item, sdata->payload) >= sdata->payload_size) {
-			return NULL;
-		}
-	}
-	return next_item;
 }
 
 #define CASE_PRIM_SIZESUM(ch, type, var) case ch: (var)+=sizeof(type); break;
