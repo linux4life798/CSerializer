@@ -95,5 +95,6 @@ size_t serial_data_size(serial_data_t sdata);
 size_t serial_item_count(serial_data_t sdata);
 int serial_item_get_int(serial_data_t sdata, size_t index);
 void serial_print_table(serial_data_t sdata);
+void serial_print_items(serial_data_t sdata);
 
 #endif /* SERIALIZER_SERIALIZER_H_ */

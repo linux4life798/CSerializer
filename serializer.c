@@ -451,3 +451,26 @@ void serial_print_table(serial_data_t sdata) {
 		printf("[ [%lu] type: %c, off: %lu ]\n", index, info.type, info.payload_off);
 	}
 }
+
+void serial_print_items(serial_data_t sdata) {
+	struct item *item;
+	size_t item_index = 0;
+
+	/* traverse items */
+	for(item = getitem(sdata, 0); item; item = getnextitem(sdata, item)) {
+		printf("[%lu] %c | ", item_index, item->type);
+		if(IS_TYPE_ARRAY(item->type)) {
+			printf("[size: %lu]\n", item->data.array.buf_size);
+		} else {
+			switch(item->type) {
+			case DATA_TYPE_CHAR:     printf("%c\n", item->data.prim.CHAR); break;
+			case DATA_TYPE_SHORT:    printf("%hu\n", item->data.prim.SHORT); break;
+			case DATA_TYPE_INT:      printf("%u\n", item->data.prim.INT); break;
+			case DATA_TYPE_LONG:     printf("%lu\n", item->data.prim.LONG); break;
+			case DATA_TYPE_LONGLONG: printf("%llu\n", item->data.prim.LONGLONG); break;
+			default: assert(0);
+			}
+		}
+		item_index++;
+	}
+}
