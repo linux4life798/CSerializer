@@ -377,19 +377,3 @@ int serial_item_get_int(serial_data_t sdata, size_t index) {
 	item = getitem(sdata, index);
 	return item->data.prim.INT;
 }
-
-/**
- * TODO: Implement
- */
-void *getnext_buffer(serial_data_t sdata, void **buffer, size_t *buffer_size) {
-	return *buffer;
-}
-
-/**
- * TODO: Implement
- */
-int getnext_int(serial_data_t sdata) {
-	struct item *item = (struct item *)PTR_UOFFSET(sdata->payload, sdata->data_items_off);
-	item = getitem(sdata, 1);
-	return item->data.prim.INT;
-}
