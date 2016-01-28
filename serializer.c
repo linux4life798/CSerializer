@@ -231,8 +231,8 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 		} else {
 			// jog the va list to stay in line for arrays
 			switch(*fmt_ch) {
-			case DATA_TYPE_CHAR:     va_arg(ap, char); break;
-			case DATA_TYPE_SHORT:    va_arg(ap, short); break;
+			case DATA_TYPE_CHAR:     va_arg(ap, int); break;
+			case DATA_TYPE_SHORT:    va_arg(ap, int); break;
 			case DATA_TYPE_INT:      va_arg(ap, int); break;
 			case DATA_TYPE_LONG:     va_arg(ap, long); break;
 			case DATA_TYPE_LONGLONG: va_arg(ap, long long); break;
@@ -288,8 +288,8 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 		/* handle copying in a primitive data type */
 		else {
 			switch(*fmt_ch) {
-			case DATA_TYPE_CHAR:     item->data.prim.CHAR=va_arg(ap, char); break;
-			case DATA_TYPE_SHORT:    item->data.prim.SHORT=va_arg(ap, short); break;
+			case DATA_TYPE_CHAR:     item->data.prim.CHAR=va_arg(ap, int); break;
+			case DATA_TYPE_SHORT:    item->data.prim.SHORT=va_arg(ap, int); break;
 			case DATA_TYPE_INT:      item->data.prim.INT=va_arg(ap, int); break;
 			case DATA_TYPE_LONG:     item->data.prim.LONG=va_arg(ap, long); break;
 			case DATA_TYPE_LONGLONG: item->data.prim.LONGLONG=va_arg(ap, long long); break;
