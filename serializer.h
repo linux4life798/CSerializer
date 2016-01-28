@@ -74,6 +74,7 @@ serial_iit_begin(serial_item_iterator_t *it, serial_data_t sdata);
 serial_item_iterator_t *
 serial_iit_next(serial_item_iterator_t *it);
 int serial_iit_hasnext(serial_item_iterator_t *it);
+int serial_iit_isend(serial_item_iterator_t *it);
 
 char   serial_iit_get_char   (serial_item_iterator_t *it);
 short  serial_iit_get_short  (serial_item_iterator_t *it);

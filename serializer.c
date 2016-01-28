@@ -363,6 +363,10 @@ int serial_iit_hasnext(serial_item_iterator_t *it) {
 	assert(it);
 	return it->item?(getnextitem(it->sdata, it->item)!=NULL):0;
 }
+int serial_iit_isend(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item == NULL;
+}
 
 char serial_iit_get_char(serial_item_iterator_t *it) {
 	assert(it);
