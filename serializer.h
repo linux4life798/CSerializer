@@ -81,6 +81,8 @@ int serial_iit_isend(serial_item_iterator_t *it);
 char   serial_iit_get_char   (serial_item_iterator_t *it);
 short  serial_iit_get_short  (serial_item_iterator_t *it);
 int    serial_iit_get_int    (serial_item_iterator_t *it);
+long   serial_iit_get_long   (serial_item_iterator_t *it);
+long long serial_iit_get_longlong(serial_item_iterator_t *it);
 const
 void  *serial_iit_get_buf_ptr(serial_item_iterator_t *it);
 size_t serial_iit_get_buf    (serial_item_iterator_t *it, void *buf);

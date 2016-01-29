@@ -387,6 +387,14 @@ int serial_iit_get_int(serial_item_iterator_t *it) {
 	assert(it);
 	return it->item?it->item->data.prim.INT:0;
 }
+long serial_iit_get_long(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?it->item->data.prim.LONG:0;
+}
+long long serial_iit_get_longlong(serial_item_iterator_t *it) {
+	assert(it);
+	return it->item?it->item->data.prim.LONGLONG:0;
+}
 const void *serial_iit_get_buf_ptr(serial_item_iterator_t *it) {
 	assert(it);
 	return it->item?it->item->data.array.buf:NULL;
