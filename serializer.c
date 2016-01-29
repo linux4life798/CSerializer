@@ -335,6 +335,11 @@ serial_data_t serial_pack(const char *fmt, ...) {
 	return sdata;
 }
 
+void serial_free(serial_data_t sdata) {
+	assert(sdata);
+	free(sdata);
+}
+
 /**
  * @brief Set the iterator to the first item of the serial data
  * @param[in] sdata The reference serial data containing iterable items
