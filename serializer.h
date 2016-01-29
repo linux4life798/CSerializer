@@ -61,6 +61,7 @@ typedef enum data_type {
 } data_type_t;
 
 
+serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va);
 serial_data_t serial_pack_extra(serial_type_t type, const char *fmt, ...);
 serial_data_t serial_pack(const char *fmt, ...);
 
