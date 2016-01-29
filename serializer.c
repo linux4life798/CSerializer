@@ -240,6 +240,7 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 			}
 		}
 	}
+	va_end(ap);
 	/* account for the table's space requirement */
 	if(type == SERIAL_TYPE_WITHTABLE) {
 		table_total_size = sizeof(struct item_info_table);
@@ -312,6 +313,7 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 
 		item_index++;
 	}
+	va_end(ap);
 	return sdata;
 }
 
