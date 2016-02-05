@@ -64,7 +64,7 @@ typedef enum data_type {
 serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va);
 serial_data_t serial_pack_extra(serial_type_t type, const char *fmt, ...);
 serial_data_t serial_pack(const char *fmt, ...);
-void          serial_free(serial_data_t sdata);
+void          serial_data_free(serial_data_t sdata);
 
 /*-----------------------------------*
  *          Item Iterators           *

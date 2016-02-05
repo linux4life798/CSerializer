@@ -12,7 +12,7 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
-//#include <error.h>
+#include <err.h>
 #include <assert.h>
 #include "serializer.h"
 
@@ -205,6 +205,16 @@ getitem(serial_data_t sdata, size_t index) {
 
 #define CASE_PRIM_SIZESUM(ch, type, var) case ch: (var)+=sizeof(type); break;
 
+/**
+ * @brief Serialize all the parameters we are given
+ *
+ * We expect the byte count as the first parameter if give an array
+ *
+ * @param type
+ * @param fmt
+ * @param va
+ * @return
+ */
 serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va) {
 	va_list ap;
 	serial_data_t sdata;
@@ -251,7 +261,7 @@ serial_data_t serial_pack_vextra(serial_type_t type, const char *fmt, va_list va
 	/* allocate serial data */
 	sdata = (serial_data_t)malloc(sizeof(struct serial_data)+payload_total_size);
 	if(sdata == NULL) {
-		perror("couldn't allocate a serial_data_t");
+		err(EXIT_FAILURE, "couldn't allocate a serial_data_t. They asked for size %lu", sizeof(struct serial_data)+payload_total_size);
 	}
 	sdata->type = type;
 	sdata->data_items_off = 0;
@@ -335,7 +345,7 @@ serial_data_t serial_pack(const char *fmt, ...) {
 	return sdata;
 }
 
-void serial_free(serial_data_t sdata) {
+void serial_data_free(serial_data_t sdata) {
 	assert(sdata);
 	free(sdata);
 }
@@ -483,7 +493,7 @@ void serial_print_items(serial_data_t sdata) {
 			printf("[size: %lu]\n", item->data.array.buf_size);
 		} else {
 			switch(item->type) {
-			case DATA_TYPE_CHAR:     printf("%c\n", item->data.prim.CHAR); break;
+			case DATA_TYPE_CHAR:     printf("'%c'\n", item->data.prim.CHAR); break;
 			case DATA_TYPE_SHORT:    printf("%hu\n", item->data.prim.SHORT); break;
 			case DATA_TYPE_INT:      printf("%u\n", item->data.prim.INT); break;
 			case DATA_TYPE_LONG:     printf("%lu\n", item->data.prim.LONG); break;
