@@ -16,6 +16,7 @@
 #include <assert.h>
 #include "serializer.h"
 
+/** Get an offset from the difference of two pointers */
 #define OFF_PTRDIFF(ptr_hi, ptr_lo) (((size_t)(ptr_hi))-((size_t)(ptr_lo)))
 /** Unsigned offset */
 #define PTR_UOFFSET(ptr, off) ( ((char *)(ptr)) + ((size_t)(off)) )
