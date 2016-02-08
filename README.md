@@ -4,9 +4,9 @@ This project aims to provide a simple, but optimized, serialization library for 
 I have designed it to be somewhat modular, so that features can be added later
 without incompatibility.
 In it's base form, it is optimized for compactness of the serialized data.
-If you use the WITHTABLE feature, add a small meta data table is added to the
+If you use the WITHTABLE feature, a small meta data table is added to the
 start of the data payload section. The meta data table contains entries that
-describe the serialized data item's type, and precise offset in the serial
+describe the serialized items' type and precise offset in the serial
 data payload. Most importantly, this table allows the deserializer
 to access items in the packed serialized data in constant time.
 
@@ -33,10 +33,14 @@ At each iterator position, you can read the data item using the serial_iit_get_*
 functions. There are also iterator functions for detecting the current item's
 type, size, presence.
 
-# Dev Notes or Banter
+# Dev Notes and Misc Info
 
-Checkout a more updated development notes on the GitHub Wiki
+Checkout the more complete development notes on the GitHub Wiki
 
-The type control mechanism should be fixed. Currently we handle the data in most places as if it is unsigned.
-The issue is that the variable arguments only handles sizes of at least int and type casts char and short to int upon invocation.
-This could spell danger in a few places when using the library with signed data.
+The type control mechanism should be fixed. Currently, we handle the data as if it is unsigned(in most places).
+The real issue arises when you consider that variable arguments only handle sizes of at least int and 
+will type casts char and shorts to int upon invocation. The fear is that we may truncate a sign extension on
+the deserialization end, instead of properly casting down the signed data. This could spell danger in a few places.
+I have not verified this behavior yet, so it may be a non-issue or a big issue.
+
+Pull requests are always welcome.
